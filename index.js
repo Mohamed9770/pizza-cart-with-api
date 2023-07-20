@@ -3,7 +3,7 @@ document.addEventListener('alpine:init', () => {
       return {
 
         message: 'PLEASE LOGIN HERE BEFORE PLACING AN ORDER!',
-        username:'Mohamed',
+        username:'',
         pizzas: [],
         featuredpizzas: [],
         cartId: '',
@@ -18,8 +18,12 @@ document.addEventListener('alpine:init', () => {
           this.createCart().then(cart => {
               this.cartId = cart.data.cart_code;
               localStorage.setItem('cartId', cart.data.cart_code);
-              this.loggedIn = true;
-              
+              if (this.username.length > 3) {
+                this.loggedIn = true;
+              }
+              else if (this.username.length <= 3) {
+                alert("noName!");
+              }
           })
         },
 
