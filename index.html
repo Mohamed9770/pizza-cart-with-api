@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIZZA CART</title>
+
+    <script src="index.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+
+
+<body>
+    <h1>Perfect Pizza</h1>
+    <main>
+        <section>
+            <div class="cart">
+                <div class="row" x-data="pizzaCartWithAPIWidget">
+
+                    <section>
+                        <div class="row">
+                            <div class="shopping_cart">
+                                <div style="text-align: center;" style="color: beige;">
+
+                                    <strong>
+                                        <h5>
+                                            <div x-text="message"></div>
+                                        </h5>
+                                    </strong>
+
+                                    <br>
+
+                                    <div class="input">
+                                        Customer Name: <input type="text" x-model="username">
+                                        <button x-on:click="logIn">login</button>
+                                        <button x-on:click="logOut">Logout</button>
+
+                                    </div>
+                                </div>
+
+                                <template x-if="loggedIn">
+                                    <div style="text-align: right;" style="text-align: center;">
+                                        <div>
+
+                                            <div x-show="cart.total.toFixed(2)>0">
+                                                <table class="right"
+                                                    style="width: 50%; margin-left: auto; margin-right: auto;">
+                                                    <tr>
+                                                        <th>Flavour</th>
+                                                        <th>Size</th>
+                                                        <th>Add/Reduce</th>
+                                                        <th>Quantity</th>
+                                                        <th>Sum(R)</th>
+                                                    </tr>
+
+                                                    <template x-for="pizza in cart.pizzas">
+                                                        <tr>
+                                                            <td x-text="pizza.flavour"></td>
+                                                            <td x-text="pizza.size"></td>
+                                                            <td><button x-on:click="add(pizza)">+</button>
+                                                                <button x-on:click="remove(pizza)">-</button>
+                                                            </td>
+                                                            <td x-text="pizza.qty"></td>
+                                                            <td x-text="pizza.total.toFixed(2)"></td>
+                                                        </tr>
+
+                                                    </template>
+                                                    <tr>
+                                                        <td>Total</td>
+                                                        <td>
+                                                            R<span x-text="cart.total.toFixed(2)"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <div x-show="payNow">
+                                                                <div x-text="paymentMessage" style="color: blue;">
+                                                                    Message....
+                                                                </div>
+                                                                <div>
+                                                                    <div>
+                                                                        <label for="">Enter Amount</label>
+                                                                        <input class="input" type="number"
+                                                                            placeholder="Pay Amount"
+                                                                            x-model="paymentAmount">
+                                                                    </div>
+                                                                    <div>
+                                                                        <button x-on:click="pay">Pay Now</button>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+
+                                                        <td>
+                                                            <button x-show="!payNow" x-on:click="payNow=true">Check Out</button>
+                                                        </td>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </section>
+
+                    <br>
+
+                    <template x-if="loggedIn">
+                        <h2 style="text-align: center;">PIZZA MENU</h2>
+                    </template>
+
+                    <div>
+                        <template x-if="loggedIn">
+                            <div class="pizza small_pizza">
+                                <h2>Small Pizza</h2>
+                                <img src="pizza-icon.png" width="100">
+                                <h3>R49.00</h3>
+                                <table class="ss">
+                                    <template x-for="pizza in pizzas">
+                                        <template x-if="pizza['size']=='small'">
+                                            <tr class="pp">
+                                                <td x-text="pizza.flavour"></td>
+                                                <td>R<strong><label x-text="pizza.price"></label></strong></td>
+                                                <td><button x-on:click="add(pizza)">BUY</button></td>
+                                            </tr>
+                                        </template>
+                                    </template>
+                                </table>
+                            </div>
+                        </template>
+
+                        <template x-if="loggedIn">
+                            <div class="pizza medium_pizza">
+                                <h2>Medium Pizza</h2>
+                                <img src="pizza-icon.png" width="100">
+                                <h3>R89.00</h3>
+                                <table class="mm">
+                                    <template x-for="pizza in pizzas">
+                                        <template x-if="pizza['size']=='medium'">
+
+                                            <tr class="pp">
+                                                <td x-text="pizza.flavour"></td>
+                                                <td>R<strong><label x-text="pizza.price"></label></strong></td>
+                                                <td><button x-on:click="add(pizza)">BUY</button></td>
+                                            </tr>
+                                        </template>
+                                    </template>
+                                </table>
+                            </div>
+                        </template>
+
+                        <template x-if="loggedIn">
+                            <div class="pizza large_pizza">
+                                <h2>Large Pizza</h2>
+                                <img src="pizza-icon.png" width="100">
+                                <h3>R129.00</h3>
+                                <table class="ll">
+                                    <template x-for="pizza in pizzas">
+                                        <template x-if="pizza['size']=='large'">
+                                            <tr class="pp">
+                                                <td x-text="pizza.flavour"></td>
+                                                <td>R<strong><label x-text="pizza.price"></label></strong></td>
+                                                <td><button x-on:click="add(pizza)">BUY</button></td>
+                                            </tr>
+                                        </template>
+                                    </template>
+                                </table>
+                            </div>
+                        </template>
+
+                        <template x-if="loggedIn">
+                            <div class="contact_us">
+                                <h2>Contact details</h2>
+                                Contact us at:011341231 info@perfectpizza.co.za
+                            </div>
+                        </template>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+    </main>
+
+</body>
+
+</html>
